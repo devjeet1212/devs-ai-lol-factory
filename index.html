@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEV'S AI Automatic LOL Factory</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-color: #FFD700;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.5s;
+            overflow-x: hidden;
+        }
+        h1 {
+            color: #FF4500;
+            text-shadow: 3px 3px 0 #FFF, 5px 5px 0 #FF0;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .joke-box {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        .joke-box:hover {
+            transform: scale(1.02);
+        }
+        .joke {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+            min-height: 72px;
+        }
+        .punchline {
+            color: #FF00FF;
+            font-size: 22px;
+            font-weight: bold;
+            display: none;
+            min-height: 66px;
+        }
+        button {
+            background: #4B0082;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        button:hover {
+            transform: scale(1.1);
+            background: #9400D3;
+            box-shadow: 0 0 15px rgba(148, 0, 211, 0.7);
+        }
+        .meme-container {
+            margin: 20px auto;
+            max-width: 500px;
+            transition: all 0.5s;
+        }
+        .meme-container img {
+            max-width: 100%;
+            border-radius: 15px;
+            border: 5px solid #00FF00;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+        .meme-container img:hover {
+            transform: scale(1.03);
+        }
+        .footer {
+            margin-top: 30px;
+            font-style: italic;
+            color: #8B0000;
+        }
+        .aur-mode {
+            background: black;
+            color: lime;
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px;
+            font-family: monospace;
+            animation: blink 1.5s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        .emoji {
+            font-size: 1.5em;
+            vertical-align: middle;
+        }
+        .floating-emoji {
+            position: fixed;
+            font-size: 24px;
+            pointer-events: none;
+            animation: floatUp 3s linear forwards;
+            z-index: 100;
+        }
+        @keyframes floatUp {
+            to {
+                top: -50px;
+                opacity: 0;
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1><span class="emoji">🤖</span> DEV'S AI LOL Factory <span class="emoji">😂</span></h1>
+    <p><em>"Where the website is funnier than my code!"</em></p>
+    
+    <div class="aur-mode">🔴 AUR MODE: ACTIVE (Auto-Updating Every 15s)</div>
+    
+    <div class="joke-box">
+        <div class="joke" id="joke">Initializing joke database...</div>
+        <div class="punchline" id="punchline"></div>
+        <button onclick="revealPunchline()"><span class="emoji">🤔</span> SHOW PUNCHLINE</button>
+        <button onclick="newContent()"><span class="emoji">🌀</span> NEW RANDOMNESS</button>
+    </div>
+    
+    <div class="meme-container" id="meme-container">
+        <!-- Meme will load here automatically -->
+    </div>
+    
+    <div class="footer">
+        <p>This website runs on 100% AI-powered chaos. Even DEV'S AI can't predict what's next!</p>
+        <p id="visit-counter">🚀 Total LOLs Generated: Loading...</p>
+        <p id="time-display">🕒 Current Time: </p>
+    </div>
+
+    <script>
+        // ===== ENHANCED JOKE DATABASE =====
+        const jokes = [
+            { joke: "Why did the JavaScript developer go broke?", punchline: "Because he used up all his cache!" },
+            { joke: "Why do programmers prefer dark mode?", punchline: "Because light attracts bugs!" },
+            { joke: "Why did the computer go to therapy?", punchline: "It had too many bytes of emotional baggage!" },
+            { joke: "What do you call a programmer from Finland?", punchline: "Nerdic!" },
+            { joke: "Why don't scientists trust atoms?", punchline: "Because they make up everything!" },
+            { joke: "What's the object-oriented way to become wealthy?", punchline: "Inheritance!" },
+            { joke: "Why did the developer go broke?", punchline: "Because they used up all their cache!" },
+            { joke: "What's the best thing about Switzerland?", punchline: "I don't know, but the flag is a big plus!" },
+            { joke: "Why did the scarecrow win an award?", punchline: "Because he was outstanding in his field!" },
+            { joke: "What do you call fake spaghetti?", punchline: "An impasta!" }
+        ];
+
+        // ===== ENHANCED MEME DATABASE =====
+        const memes = [
+            "https://i.imgflip.com/4/1bij.jpg", // One Does Not Simply
+            "https://i.imgflip.com/4/1bgw.jpg", // Distracted Boyfriend
+            "https://i.imgflip.com/4/1bhf.jpg", // Drake Hotline Bling
+            "https://i.imgflip.com/4/1bh3.jpg", // Batman Slapping Robin
+            "https://i.imgflip.com/4/1bh8.jpg", // Two Buttons
+            "https://i.imgflip.com/4/1g8my.jpg", // Drakeposting
+            "https://i.imgflip.com/4/1ihzfe.jpg", // Roll Safe
+            "https://i.imgflip.com/4/9ehk.jpg", // Success Kid
+            "https://i.imgflip.com/4/1h7in3.jpg", // Gru's Plan
+            "https://i.imgflip.com/4/1o00in.jpg" // Ancient Aliens Guy
+        ];
+
+        // ===== AUR (Auto-Updating Randomness) SYSTEM =====
+        let currentJokeIndex = 0;
+        
+        // Enhanced visit counter with localStorage
+        let visitCount = localStorage.getItem('devsAIVisitCount') || 0;
+        visitCount++;
+        localStorage.setItem('devsAIVisitCount', visitCount);
+        
+        // Display initial content
+        function initialize() {
+            displayRandomJoke();
+            displayRandomMeme();
+            updateVisitCounter();
+            startClock();
+            enableAURMode();
+            createFloatingEmojis();
+        }
+
+        // Display random joke
+        function displayRandomJoke() {
+            currentJokeIndex = Math.floor(Math.random() * jokes.length);
+            document.getElementById('joke').textContent = jokes[currentJokeIndex].joke;
+            document.getElementById('punchline').textContent = jokes[currentJokeIndex].punchline;
+            document.getElementById('punchline').style.display = 'none';
+        }
+
+        // Show punchline
+        function revealPunchline() {
+            const punchline = document.getElementById('punchline');
+            punchline.style.display = 'block';
+            createFloatingEmoji('🤣', 5);
+        }
+
+        // Display random meme
+        function displayRandomMeme() {
+            const randomMeme = memes[Math.floor(Math.random() * memes.length)];
+            const memeContainer = document.getElementById('meme-container');
+            memeContainer.innerHTML = `
+                <img src="${randomMeme}" alt="Random Meme" onload="this.style.opacity=1" style="opacity:0;transition:opacity 0.5s">
+            `;
+        }
+
+        // Update visit counter
+        function updateVisitCounter() {
+            document.getElementById('visit-counter').textContent = 
+                `🚀 Total LOLs Generated: ${visitCount.toLocaleString()}`;
+        }
+
+        // Live clock
+        function startClock() {
+            updateClock();
+            setInterval(updateClock, 1000);
+        }
+        
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('time-display').textContent = 
+                `🕒 Current Time: ${now.toLocaleTimeString()}`;
+        }
+
+        // Change background randomly
+        function changeBackground() {
+            const colors = [
+                '#FFD700', '#FF6347', '#7FFFD4', '#9370DB', '#FF69B4',
+                '#00FA9A', '#FFA500', '#40E0D0', '#FF6347', '#BA55D3'
+            ];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.backgroundColor = randomColor;
+        }
+
+        // Generate new random content
+        function newContent() {
+            displayRandomJoke();
+            displayRandomMeme();
+            changeBackground();
+            createFloatingEmoji('🎉', 10);
+        }
+
+        // Create floating emojis
+        function createFloatingEmoji(emoji, count) {
+            for (let i = 0; i < count; i++) {
+                setTimeout(() => {
+                    const floatingEmoji = document.createElement('div');
+                    floatingEmoji.className = 'floating-emoji';
+                    floatingEmoji.textContent = emoji;
+                    floatingEmoji.style.left = Math.random() * 100 + 'vw';
+                    floatingEmoji.style.top = '90vh';
+                    floatingEmoji.style.fontSize = (Math.random() * 30 + 20) + 'px';
+                    floatingEmoji.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    document.body.appendChild(floatingEmoji);
+                    
+                    // Remove after animation
+                    setTimeout(() => {
+                        floatingEmoji.remove();
+                    }, 3000);
+                }, i * 200);
+            }
+        }
+
+        // Create initial floating emojis
+        function createFloatingEmojis() {
+            const emojis = ['😂', '🤣', '😆', '🤪', '👻', '🤖', '💩', '🎃'];
+            setInterval(() => {
+                createFloatingEmoji(emojis[Math.floor(Math.random() * emojis.length)], 1);
+            }, 3000);
+        }
+
+        // AUR Mode: Auto-refresh system
+        function enableAURMode() {
+            // Change content every 15 seconds
+            setInterval(newContent, 15000);
+            
+            // Change background every 7 seconds
+            setInterval(changeBackground, 7000);
+        }
+
+        // Initialize everything when page loads
+        window.onload = initialize;
+    </script>
+</body>
+</html>
